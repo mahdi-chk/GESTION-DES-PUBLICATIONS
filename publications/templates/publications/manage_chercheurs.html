@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des comptes chercheurs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 2rem;
+            color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 2rem auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+        .actions a {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .actions a:first-child {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .actions a:last-child {
+            background-color: #dc3545;
+            color: #fff;
+            margin-left: 0.5rem;
+        }
+        .actions a:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestion des comptes chercheurs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom d'utilisateur</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chercheur in chercheurs %}
+            <tr>
+                <td>{{ chercheur.user.username }}</td>
+                <td>{{ chercheur.user.email }}</td>
+                <td>{{ chercheur.user.is_active }}</td>
+                <td class="actions">
+                    <a href="{% url 'toggle_active_status' chercheur.user.id %}">
+                        {% if chercheur.user.is_active %}Désactiver{% else %}Activer{% endif %}
+                    </a>
+                    <a href="{% url 'delete_chercheur' chercheur.user.id %}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'home' %}" class="back-link">Retour à l'accueil</a>
+</body>
+</html>

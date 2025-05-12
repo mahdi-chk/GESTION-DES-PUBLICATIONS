@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ publication.titre }}</title>
+    <meta name="description" content="{{ publication.description }}">
+    <meta name="keywords" content="publication, recherche, {{ publication.thematique.nom }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            width: 100%;
+            padding: 1rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            color: #fff;
+            margin: 0;
+        }
+        main {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        p {
+            margin: 0.5rem 0;
+        }
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+        ul li {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        ul li:hover {
+            background-color: #f0f0f0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1rem;
+        }
+        form p {
+            margin-bottom: 1rem;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 1rem;
+            align-self: flex-start;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background: #555;
+        }
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .actions a {
+            display: inline-block;
+            margin-right: 1rem;
+            color: #333;
+            background: #f4f4f4;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .actions a:hover {
+            background: #333;
+            color: #fff;
+        }
+        .actions a:last-child {
+            margin-right: 0;
+        }
+        .delete-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ publication.titre }}</h1>
+    </header>
+    <main>
+        <p><strong>Par :</strong> {{ publication.auteur.user.username }}</p>
+        <p>{{ publication.description }}</p>
+        <p><strong>Thématique :</strong> {{ publication.thematique.nom }}</p>
+        <p><strong>Date de publication :</strong> {{ publication.date_publication }}</p>
+        {% if publication.contenu_pdf %}
+            <p><strong>PDF :</strong> <a href="{{ publication.contenu_pdf.url }}" download>Télécharger le PDF</a></p>
+        {% else %}
+            <p><strong>PDF :</strong> Aucun fichier PDF disponible.</p>
+        {% endif %}
+        <p><strong>Nombre de vues :</strong> {{ publication.views }}</p>
+
+        {% if commentaires %}
+            <h2>Commentaires</h2>
+            <ul>
+            {% for commentaire in commentaires %}
+                <li>
+                    {{ commentaire.contenu }} - par {{ commentaire.auteur.user.username }} 
+                    ({{ commentaire.date_comment }})
+                    {% if is_superuser %}
+                        <form method="post" action="{% url 'delete_commentaire' commentaire.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn" aria-label="Supprimer commentaire">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <h2>Ajouter un commentaire</h2>
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="contenu" placeholder="Écrire un commentaire..."></textarea>
+                <button type="submit">Commenter</button>
+            </form>
+        {% endif %}
+        
+        <div class="actions">
+            {% if user == publication.auteur.user or is_superuser %}
+                <a href="{% url 'update_publication' publication.pk %}">Modifier</a>
+                <a href="{% url 'delete_publication' publication.pk %}">Supprimer</a>
+            {% endif %}
+            <a href="{% url 'home' %}">Retour</a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des publications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .sort-link {
+            color: white;
+            text-decoration: none;
+        }
+        .sort-link:hover {
+            text-decoration: underline;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Statistiques des publications</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>
+                    <a href="?sort_by=views&order={% if sort_by == 'views' and order == 'desc' %}asc{% else %}desc{% endif %}" class="sort-link">
+                        Nombre de vues
+                        {% if sort_by == 'views' %}
+                            {% if order == 'asc' %} ▲ {% else %} ▼ {% endif %}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?sort_by=comments&order={% if sort_by == 'comments' and order == 'desc' %}asc{% else %}desc{% endif %}" class="sort-link">
+                        Nombre de commentaires
+                        {% if sort_by == 'comments' %}
+                            {% if order == 'asc' %} ▲ {% else %} ▼ {% endif %}
+                        {% endif %}
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in stats %}
+            <tr>
+                <td>{{ stat.publication.titre }}</td>
+                <td>{{ stat.views }}</td>
+                <td>{{ stat.comments }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'home' %}" class="back-button">Retour à l'accueil</a>
+</body>
+</html>

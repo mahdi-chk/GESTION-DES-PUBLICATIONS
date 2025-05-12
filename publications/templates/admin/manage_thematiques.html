@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des Thématiques</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        header .back-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        header .back-button:hover {
+            background-color: #0056b3;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .create-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+        ul li {
+            list-style: none;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+        .actions a {
+            margin-left: 0.5rem;
+        }
+        .actions a.delete {
+            color: #dc3545;
+        }
+        .footer-button {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .footer-button button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .footer-button button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestion des Thématiques</h1>
+    </header>
+    <main>
+        <a class="create-link" href="{% url 'create_thematique' %}">Créer une nouvelle thématique</a>
+        <ul>
+        {% for thematique in thematiques %}
+            <li>
+                {{ thematique.nom }}
+                <div class="actions">
+                    <a href="{% url 'edit_thematique' thematique.pk %}">Modifier</a>
+                    <a class="delete" href="{% url 'delete_thematique' thematique.pk %}">Supprimer</a>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </main>
+    <div class="footer-button">
+        <a href="{% url 'home' %}" class="back-button">Retour à l'accueil</a>
+    </div>
+</body>
+</html>
